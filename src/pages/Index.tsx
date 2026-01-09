@@ -245,12 +245,12 @@ const Index = () => {
                     {!searchImage ? (
                       <>
                         <Icon name="Upload" size={48} className="mx-auto mb-6 text-gray-400" />
+                        <div className="text-base mb-2 font-light tracking-wide">Нажмите для загрузки</div>
+                        <div className="text-xs text-gray-500 mb-6 tracking-wide">
+                          PNG, JPG до 10MB
+                        </div>
                         <Label htmlFor="search-upload" className="cursor-pointer">
-                          <div className="text-base mb-2 font-light tracking-wide">Нажмите для загрузки</div>
-                          <div className="text-xs text-gray-500 mb-6 tracking-wide">
-                            PNG, JPG до 10MB
-                          </div>
-                          <Button className="bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em] font-light">
+                          <Button type="button" className="bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em] font-light">
                             Выбрать файл
                           </Button>
                         </Label>
@@ -313,7 +313,7 @@ const Index = () => {
                       <div className="text-center">
                         <Icon name="Shirt" size={40} className="mx-auto mb-4 text-gray-400" />
                         <Label htmlFor="clothes-upload" className="cursor-pointer">
-                          <Button variant="outline" className="mb-2">
+                          <Button type="button" variant="outline" className="mb-2">
                             Загрузить фото
                           </Button>
                         </Label>
@@ -351,7 +351,7 @@ const Index = () => {
                       <div className="text-center">
                         <Icon name="User" size={40} className="mx-auto mb-4 text-gray-400" />
                         <Label htmlFor="person-upload" className="cursor-pointer">
-                          <Button variant="outline" className="mb-2">
+                          <Button type="button" variant="outline" className="mb-2">
                             Загрузить фото
                           </Button>
                         </Label>
@@ -638,12 +638,14 @@ const Index = () => {
                               </Button>
                             </div>
                           ) : (
-                            <Label htmlFor="logo-upload" className="cursor-pointer">
-                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-accent transition-colors">
-                                <Icon name="ImagePlus" size={28} className="mx-auto mb-2 text-gray-400" />
-                                <p className="text-xs text-gray-500 mb-1">Загрузить логотип</p>
-                                <p className="text-xs text-gray-400">PNG с прозрачным фоном</p>
-                              </div>
+                            <>
+                              <Label htmlFor="logo-upload" className="cursor-pointer block">
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-accent transition-colors">
+                                  <Icon name="ImagePlus" size={28} className="mx-auto mb-2 text-gray-400" />
+                                  <p className="text-xs text-gray-500 mb-1">Загрузить логотип</p>
+                                  <p className="text-xs text-gray-400">PNG с прозрачным фоном</p>
+                                </div>
+                              </Label>
                               <Input
                                 id="logo-upload"
                                 type="file"
@@ -651,7 +653,7 @@ const Index = () => {
                                 className="hidden"
                                 onChange={(e) => handleImageUpload(e, 'logo')}
                               />
-                            </Label>
+                            </>
                           )}
                         </div>
 
@@ -670,12 +672,14 @@ const Index = () => {
                               </Button>
                             </div>
                           ) : (
-                            <Label htmlFor="banner-upload" className="cursor-pointer">
-                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-accent transition-colors">
-                                <Icon name="ImagePlus" size={32} className="mx-auto mb-3 text-gray-400" />
-                                <p className="text-xs text-gray-500 mb-2">Загрузить баннер для главной страницы</p>
-                                <p className="text-xs text-gray-400">1920×400 px, JPG или PNG</p>
-                              </div>
+                            <>
+                              <Label htmlFor="banner-upload" className="cursor-pointer block">
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-accent transition-colors">
+                                  <Icon name="ImagePlus" size={32} className="mx-auto mb-3 text-gray-400" />
+                                  <p className="text-xs text-gray-500 mb-2">Загрузить баннер для главной страницы</p>
+                                  <p className="text-xs text-gray-400">1920×400 px, JPG или PNG</p>
+                                </div>
+                              </Label>
                               <Input
                                 id="banner-upload"
                                 type="file"
@@ -683,7 +687,7 @@ const Index = () => {
                                 className="hidden"
                                 onChange={(e) => handleImageUpload(e, 'banner')}
                               />
-                            </Label>
+                            </>
                           )}
                         </div>
 
