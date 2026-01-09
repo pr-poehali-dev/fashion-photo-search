@@ -113,19 +113,25 @@ def handler(event: dict, context) -> dict:
                 }
                 
                 vision_response = requests.post(vision_url, json=vision_payload, timeout=10)
+                print(f'Vision API status: {vision_response.status_code}')
                 
                 if vision_response.status_code == 200:
                     vision_data = vision_response.json()
+                    print(f'Vision response: {json.dumps(vision_data)[:500]}')
                     annotations = vision_data.get('responses', [{}])[0]
                     
                     labels = [label['description'] for label in annotations.get('labelAnnotations', [])[:5]]
                     web_entities = [entity['description'] for entity in annotations.get('webDetection', {}).get('webEntities', [])[:3]]
                     
                     search_terms = labels + web_entities
+                    print(f'Search terms: {search_terms}')
                     if search_terms:
                         search_query = ' '.join(search_terms[:4]) + ' buy online fashion'
-            except:
-                pass
+                        print(f'Final query: {search_query}')
+                else:
+                    print(f'Vision API error: {vision_response.text[:200]}')
+            except Exception as e:
+                print(f'Vision exception: {str(e)}')
         
         if api_key and search_engine_id:
             search_url = 'https://www.googleapis.com/customsearch/v1'
@@ -140,10 +146,14 @@ def handler(event: dict, context) -> dict:
             }
             
             response = requests.get(search_url, params=params, timeout=10)
+            print(f'Search API status: {response.status_code}')
             
             if response.status_code == 200:
                 data = response.json()
                 items = data.get('items', [])
+                print(f'Found {len(items)} items')
+            else:
+                print(f'Search API error: {response.text[:200]}')
                 
                 brands = ['CHANEL', 'DIOR', 'GUCCI', 'PRADA', 'VALENTINO', 'VERSACE', 'ARMANI', 'DOLCE&GABBANA']
                 
