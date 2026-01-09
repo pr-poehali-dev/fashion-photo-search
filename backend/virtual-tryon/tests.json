@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS request for CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedHeaders": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    {
+      "name": "POST tryon with valid images",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "personImage": "data:image/jpeg;base64,/9j/4AAQSkZJRg==",
+        "clothesImage": "data:image/jpeg;base64,/9j/4AAQSkZJRg=="
+      },
+      "headers": {
+        "x-user-id": "1"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "tryonId": "number",
+        "personImageUrl": "string",
+        "clothesImageUrl": "string",
+        "resultImageUrl": "string",
+        "status": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

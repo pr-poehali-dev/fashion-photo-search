@@ -13,6 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { searchFashion, virtualTryon, SearchResult } from '@/lib/api';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<'home' | 'search' | 'tryon' | 'results' | 'profile'>('home');
@@ -20,6 +22,9 @@ const Index = () => {
   const [tryonClothes, setTryonClothes] = useState<string | null>(null);
   const [tryonPerson, setTryonPerson] = useState<string | null>(null);
   const [clothingType, setClothingType] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [tryonResult, setTryonResult] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const [theme, setTheme] = useState({
     bgColor: 'bg-white',
@@ -40,12 +45,42 @@ const Index = () => {
     tryonButton: 'Примерить',
   });
 
-  const mockResults = [
-    { id: 1, name: 'Шелковая блуза', brand: 'CHANEL', price: '89 990 ₽', image: '/placeholder.svg', match: '98%' },
-    { id: 2, name: 'Атласная рубашка', brand: 'DIOR', price: '75 990 ₽', image: '/placeholder.svg', match: '95%' },
-    { id: 3, name: 'Классическая блуза', brand: 'GUCCI', price: '62 990 ₽', image: '/placeholder.svg', match: '92%' },
-    { id: 4, name: 'Элегантная блузка', brand: 'VALENTINO', price: '54 990 ₽', image: '/placeholder.svg', match: '90%' },
-  ];
+  const handleSearch = async () => {
+    if (!searchImage) {
+      toast.error('Загрузите фото для поиска');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const response = await searchFashion(searchImage, clothingType);
+      setSearchResults(response.results);
+      setActiveSection('results');
+      toast.success(`Найдено ${response.results.length} товаров`);
+    } catch (error) {
+      toast.error('Ошибка поиска: ' + (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTryon = async () => {
+    if (!tryonPerson || !tryonClothes) {
+      toast.error('Загрузите оба фото для примерки');
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const response = await virtualTryon(tryonPerson, tryonClothes);
+      setTryonResult(response.resultImageUrl);
+      toast.success('Примерка готова!');
+    } catch (error) {
+      toast.error('Ошибка примерки: ' + (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const history = [
     { id: 1, type: 'Поиск', date: '08.01.2026', status: 'Найдено 12 товаров' },
@@ -238,15 +273,17 @@ const Index = () => {
                           <Button
                             size="lg"
                             className="bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em] font-light"
-                            onClick={() => setActiveSection('results')}
+                            onClick={handleSearch}
+                            disabled={isLoading}
                           >
-                            Найти вещь
+                            {isLoading ? 'Ищем...' : 'Найти вещь'}
                             <Icon name="Search" className="ml-2" size={20} />
                           </Button>
                           <Button
                             size="lg"
                             variant="outline"
                             onClick={() => setSearchImage(null)}
+                            disabled={isLoading}
                           >
                             Загрузить другое фото
                           </Button>
@@ -367,12 +404,26 @@ const Index = () => {
                 <Button
                   size="lg"
                   className="bg-black hover:bg-gray-800 px-12 uppercase text-xs tracking-[0.15em] font-light"
-                  disabled={!tryonClothes || !tryonPerson || !clothingType}
+                  disabled={!tryonClothes || !tryonPerson || isLoading}
+                  onClick={handleTryon}
                 >
-                  Примерить
+                  {isLoading ? 'Обрабатываем...' : 'Примерить'}
                   <Icon name="Sparkles" className="ml-2" size={20} />
                 </Button>
               </div>
+              
+              {tryonResult && (
+                <Card className="mt-8">
+                  <CardContent className="p-8">
+                    <h3 className="text-xl font-light mb-6 text-center uppercase tracking-[0.15em]">Результат примерки</h3>
+                    <img
+                      src={tryonResult}
+                      alt="Try-on Result"
+                      className="max-h-[600px] mx-auto rounded-lg shadow-lg"
+                    />
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         )}
@@ -381,24 +432,25 @@ const Index = () => {
           <div className="container mx-auto px-6 py-12 animate-fade-in">
             <div className="mb-12 text-center">
               <h2 className="text-4xl font-light mb-4 uppercase tracking-[0.15em]">Результаты поиска</h2>
-              <p className="text-sm text-gray-500 tracking-wide">Найдено {mockResults.length} похожих товара</p>
+              <p className="text-sm text-gray-500 tracking-wide">Найдено {searchResults.length} похожих товара</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {mockResults.map((item) => (
+              {searchResults.map((item, index) => (
                 <Card
-                  key={item.id}
+                  key={index}
                   className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300"
+                  onClick={() => item.product_url && window.open(item.product_url, '_blank')}
                 >
                   <CardContent className="p-0">
                     <div className="relative overflow-hidden">
                       <img
-                        src={item.image}
+                        src={item.image_url}
                         alt={item.name}
                         className={`w-full ${cardSizeClasses[theme.cardSize as keyof typeof cardSizeClasses]} object-cover group-hover:scale-105 transition-transform duration-300`}
                       />
                       <Badge className="absolute top-4 right-4 bg-accent text-black border-0">
-                        {item.match}
+                        {item.match_score}%
                       </Badge>
                     </div>
                     <div className="p-6">
@@ -406,7 +458,7 @@ const Index = () => {
                         {item.brand}
                       </div>
                       <h3 className="text-sm mb-3 font-light">{item.name}</h3>
-                      <div className="text-base font-light">{item.price}</div>
+                      <div className="text-base font-light">{item.price.toLocaleString('ru-RU')} {item.currency}</div>
                     </div>
                   </CardContent>
                 </Card>

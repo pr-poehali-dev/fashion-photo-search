@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS request for CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedHeaders": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    {
+      "name": "POST search with valid image",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "image": "data:image/jpeg;base64,/9j/4AAQSkZJRg==",
+        "clothingType": "blouse"
+      },
+      "headers": {
+        "x-user-id": "1"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "searchId": "number",
+        "results": "array",
+        "imageUrl": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
