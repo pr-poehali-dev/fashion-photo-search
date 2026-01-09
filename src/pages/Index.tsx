@@ -29,6 +29,9 @@ const Index = () => {
     logoPosition: 'left',
     cardSize: 'medium',
   });
+  
+  const [customLogo, setCustomLogo] = useState<string | null>(null);
+  const [heroBanner, setHeroBanner] = useState<string | null>(null);
 
   const mockResults = [
     { id: 1, name: 'Шелковая блуза', brand: 'CHANEL', price: '89 990 ₽', image: '/placeholder.svg', match: '98%' },
@@ -43,7 +46,7 @@ const Index = () => {
     { id: 3, type: 'Поиск', date: '05.01.2026', status: 'Найдено 8 товаров' },
   ];
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'search' | 'clothes' | 'person') => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'search' | 'clothes' | 'person' | 'logo' | 'banner') => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -52,6 +55,8 @@ const Index = () => {
         if (type === 'search') setSearchImage(result);
         else if (type === 'clothes') setTryonClothes(result);
         else if (type === 'person') setTryonPerson(result);
+        else if (type === 'logo') setCustomLogo(result);
+        else if (type === 'banner') setHeroBanner(result);
       };
       reader.readAsDataURL(file);
     }
@@ -68,7 +73,11 @@ const Index = () => {
       <nav className={`fixed top-0 w-full ${theme.bgColor}/95 backdrop-blur-sm border-b border-gray-200 z-50 transition-colors duration-300`}>
         <div className="container mx-auto px-6 py-4">
           <div className={`flex items-center ${theme.logoPosition === 'center' ? 'justify-center' : theme.logoPosition === 'right' ? 'justify-end' : 'justify-between'}`}>
-            <h1 className={`text-2xl font-light tracking-[0.2em] ${theme.textColor}`} style={{ fontFamily: theme.font }}>LUX ATELIER</h1>
+            {customLogo ? (
+              <img src={customLogo} alt="Logo" className="h-12 object-contain" />
+            ) : (
+              <h1 className={`text-2xl font-light tracking-[0.2em] ${theme.textColor}`} style={{ fontFamily: theme.font }}>LUX ATELIER</h1>
+            )}
             {theme.logoPosition !== 'center' && theme.logoPosition !== 'right' && (
             <div className="flex gap-8">
               <button
@@ -104,6 +113,11 @@ const Index = () => {
       <main className="pt-20">
         {activeSection === 'home' && (
           <div className="animate-fade-in">
+            {heroBanner && (
+              <div className="w-full mb-12">
+                <img src={heroBanner} alt="Hero Banner" className="w-full h-96 object-cover" />
+              </div>
+            )}
             <section className="container mx-auto px-6 py-24 text-center">
               <h2 className="text-6xl md:text-7xl font-light mb-8 leading-tight tracking-wide uppercase">
                 Найдите идеальную вещь
@@ -550,13 +564,68 @@ const Index = () => {
                           </div>
                         </div>
 
+                        <div className="border-b pb-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Свой логотип</Label>
+                          {customLogo ? (
+                            <div className="space-y-3">
+                              <img src={customLogo} alt="Custom Logo" className="h-16 object-contain mx-auto" />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs"
+                                onClick={() => setCustomLogo(null)}
+                              >
+                                Удалить логотип
+                              </Button>
+                            </div>
+                          ) : (
+                            <Label htmlFor="logo-upload" className="cursor-pointer">
+                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-accent transition-colors">
+                                <Icon name="ImagePlus" size={28} className="mx-auto mb-2 text-gray-400" />
+                                <p className="text-xs text-gray-500 mb-1">Загрузить логотип</p>
+                                <p className="text-xs text-gray-400">PNG с прозрачным фоном</p>
+                              </div>
+                              <Input
+                                id="logo-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageUpload(e, 'logo')}
+                              />
+                            </Label>
+                          )}
+                        </div>
+
                         <div>
                           <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Рекламный баннер</Label>
-                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-accent transition-colors cursor-pointer">
-                            <Icon name="ImagePlus" size={32} className="mx-auto mb-3 text-gray-400" />
-                            <p className="text-xs text-gray-500 mb-2">Загрузить баннер для главной страницы</p>
-                            <p className="text-xs text-gray-400">1920×400 px, JPG или PNG</p>
-                          </div>
+                          {heroBanner ? (
+                            <div className="space-y-3">
+                              <img src={heroBanner} alt="Hero Banner" className="w-full h-32 object-cover rounded-lg" />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs"
+                                onClick={() => setHeroBanner(null)}
+                              >
+                                Удалить баннер
+                              </Button>
+                            </div>
+                          ) : (
+                            <Label htmlFor="banner-upload" className="cursor-pointer">
+                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-accent transition-colors">
+                                <Icon name="ImagePlus" size={32} className="mx-auto mb-3 text-gray-400" />
+                                <p className="text-xs text-gray-500 mb-2">Загрузить баннер для главной страницы</p>
+                                <p className="text-xs text-gray-400">1920×400 px, JPG или PNG</p>
+                              </div>
+                              <Input
+                                id="banner-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageUpload(e, 'banner')}
+                              />
+                            </Label>
+                          )}
                         </div>
                       </div>
                       <Button className="w-full bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em]">
