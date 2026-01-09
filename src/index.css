@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -24,7 +24,7 @@
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 43 74% 66%;
+    --accent: 0 0% 20%;
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
@@ -99,7 +99,12 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Montserrat", sans-serif;
+    font-family:
+      "Roboto",
+      -apple-system,
+      sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.02em;
   }
 
   h1,
@@ -108,7 +113,12 @@
   h4,
   h5,
   h6 {
-    font-family: "Cormorant", serif;
-    font-weight: 600;
+    font-family:
+      "Roboto",
+      -apple-system,
+      sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 }
