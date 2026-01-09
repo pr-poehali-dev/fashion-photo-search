@@ -32,6 +32,13 @@ const Index = () => {
   
   const [customLogo, setCustomLogo] = useState<string | null>(null);
   const [heroBanner, setHeroBanner] = useState<string | null>(null);
+  
+  const [texts, setTexts] = useState({
+    heroTitle: 'Найдите идеальную вещь',
+    heroSubtitle: 'AI-технологии для поиска одежды по фото и виртуальной примерки',
+    searchButton: 'Начать поиск',
+    tryonButton: 'Примерить',
+  });
 
   const mockResults = [
     { id: 1, name: 'Шелковая блуза', brand: 'CHANEL', price: '89 990 ₽', image: '/placeholder.svg', match: '98%' },
@@ -120,10 +127,10 @@ const Index = () => {
             )}
             <section className="container mx-auto px-6 py-24 text-center">
               <h2 className="text-6xl md:text-7xl font-light mb-8 leading-tight tracking-wide uppercase">
-                Найдите идеальную вещь
+                {texts.heroTitle}
               </h2>
               <p className="text-base text-gray-500 mb-12 max-w-2xl mx-auto font-light tracking-wide">
-                AI-технологии для поиска одежды по фото и виртуальной примерки
+                {texts.heroSubtitle}
               </p>
               <div className="flex gap-4 justify-center">
                 <Button
@@ -131,7 +138,7 @@ const Index = () => {
                   className="bg-black text-white hover:bg-gray-800 px-10 py-6 text-xs uppercase tracking-[0.15em] font-light"
                   onClick={() => setActiveSection('search')}
                 >
-                  Начать поиск
+                  {texts.searchButton}
                   <Icon name="Search" className="ml-2" size={20} />
                 </Button>
                 <Button
@@ -140,7 +147,7 @@ const Index = () => {
                   className="border-black text-black hover:bg-gray-50 px-10 py-6 text-xs uppercase tracking-[0.15em] font-light"
                   onClick={() => setActiveSection('tryon')}
                 >
-                  Примерить
+                  {texts.tryonButton}
                   <Icon name="Sparkles" className="ml-2" size={20} />
                 </Button>
               </div>
@@ -626,6 +633,50 @@ const Index = () => {
                               />
                             </Label>
                           )}
+                        </div>
+
+                        <div className="border-t pt-4 mt-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-4 block">Тексты главной страницы</Label>
+                          <div className="space-y-3">
+                            <div>
+                              <Label className="text-xs text-gray-500 mb-1 block">Заголовок</Label>
+                              <Input 
+                                value={texts.heroTitle}
+                                onChange={(e) => setTexts({ ...texts, heroTitle: e.target.value })}
+                                className="text-sm"
+                                placeholder="Найдите идеальную вещь"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs text-gray-500 mb-1 block">Подзаголовок</Label>
+                              <Input 
+                                value={texts.heroSubtitle}
+                                onChange={(e) => setTexts({ ...texts, heroSubtitle: e.target.value })}
+                                className="text-sm"
+                                placeholder="AI-технологии для поиска одежды"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <Label className="text-xs text-gray-500 mb-1 block">Кнопка 1</Label>
+                                <Input 
+                                  value={texts.searchButton}
+                                  onChange={(e) => setTexts({ ...texts, searchButton: e.target.value })}
+                                  className="text-sm"
+                                  placeholder="Начать поиск"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs text-gray-500 mb-1 block">Кнопка 2</Label>
+                                <Input 
+                                  value={texts.tryonButton}
+                                  onChange={(e) => setTexts({ ...texts, tryonButton: e.target.value })}
+                                  className="text-sm"
+                                  placeholder="Примерить"
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <Button className="w-full bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em]">
