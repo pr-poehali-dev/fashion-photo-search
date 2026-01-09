@@ -277,8 +277,17 @@ const Index = () => {
                             onClick={handleSearch}
                             disabled={isLoading}
                           >
-                            {isLoading ? 'Ищем...' : 'Найти вещь'}
-                            <Icon name="Search" className="ml-2" size={20} />
+                            {isLoading ? (
+                              <>
+                                <Icon name="Loader2" className="mr-2 animate-spin" size={20} />
+                                Ищем...
+                              </>
+                            ) : (
+                              <>
+                                Найти вещь
+                                <Icon name="Search" className="ml-2" size={20} />
+                              </>
+                            )}
                           </Button>
                           <Button
                             size="lg"
@@ -410,8 +419,17 @@ const Index = () => {
                   disabled={!tryonClothes || !tryonPerson || isLoading}
                   onClick={handleTryon}
                 >
-                  {isLoading ? 'Обрабатываем...' : 'Примерить'}
-                  <Icon name="Sparkles" className="ml-2" size={20} />
+                  {isLoading ? (
+                    <>
+                      <Icon name="Loader2" className="mr-2 animate-spin" size={20} />
+                      Обрабатываем...
+                    </>
+                  ) : (
+                    <>
+                      Примерить
+                      <Icon name="Sparkles" className="ml-2" size={20} />
+                    </>
+                  )}
                 </Button>
               </div>
               
@@ -435,9 +453,23 @@ const Index = () => {
           <div className="container mx-auto px-6 py-12 animate-fade-in">
             <div className="mb-12 text-center">
               <h2 className="text-4xl font-light mb-4 uppercase tracking-[0.15em]">Результаты поиска</h2>
-              <p className="text-sm text-gray-500 tracking-wide">Найдено {searchResults.length} похожих товара</p>
+              <p className="text-sm text-gray-500 tracking-wide">
+                {searchResults.length > 0 ? `Найдено ${searchResults.length} похожих товара` : 'Загрузите фото для поиска'}
+              </p>
             </div>
 
+            {searchResults.length === 0 ? (
+              <Card className="max-w-md mx-auto">
+                <CardContent className="p-12 text-center">
+                  <Icon name="Search" size={64} className="mx-auto mb-6 text-gray-300" />
+                  <h3 className="text-xl font-light mb-4">Результаты появятся здесь</h3>
+                  <p className="text-sm text-gray-500 mb-6">Загрузите фото одежды в разделе "Поиск", чтобы найти похожие товары</p>
+                  <Button onClick={() => setActiveSection('search')} variant="outline">
+                    Перейти к поиску
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {searchResults.map((item, index) => (
                 <Card
@@ -467,16 +499,19 @@ const Index = () => {
               ))}
             </div>
 
-            <div className="text-center">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setActiveSection('search')}
-              >
-                Новый поиск
-                <Icon name="Search" className="ml-2" size={20} />
-              </Button>
-            </div>
+            {searchResults.length > 0 && (
+              <div className="text-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setActiveSection('search')}
+                >
+                  Новый поиск
+                  <Icon name="Search" className="ml-2" size={20} />
+                </Button>
+              </div>
+            )}
+            )}
           </div>
         )}
 
