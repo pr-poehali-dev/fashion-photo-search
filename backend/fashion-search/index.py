@@ -92,14 +92,15 @@ def handler(event: dict, context) -> dict:
         search_id = cur.fetchone()[0]
         
         # Имитация AI-поиска (в реальности здесь будет API внешнего сервиса)
+        # Используем загруженное изображение как базу для всех результатов
         mock_results = [
             {
                 'name': 'Шелковая блуза',
                 'brand': 'CHANEL',
                 'price': 89990.0,
                 'currency': 'RUB',
-                'image_url': 'https://via.placeholder.com/400x500/FFE5E5/000000?text=CHANEL',
-                'product_url': 'https://example.com/product1',
+                'image_url': image_url,
+                'product_url': '',
                 'match_score': 98.0
             },
             {
@@ -107,8 +108,8 @@ def handler(event: dict, context) -> dict:
                 'brand': 'DIOR',
                 'price': 75990.0,
                 'currency': 'RUB',
-                'image_url': 'https://via.placeholder.com/400x500/E5F0FF/000000?text=DIOR',
-                'product_url': 'https://example.com/product2',
+                'image_url': image_url,
+                'product_url': '',
                 'match_score': 95.0
             },
             {
@@ -116,8 +117,8 @@ def handler(event: dict, context) -> dict:
                 'brand': 'GUCCI',
                 'price': 62990.0,
                 'currency': 'RUB',
-                'image_url': 'https://via.placeholder.com/400x500/E5FFE5/000000?text=GUCCI',
-                'product_url': 'https://example.com/product3',
+                'image_url': image_url,
+                'product_url': '',
                 'match_score': 92.0
             },
             {
@@ -125,8 +126,8 @@ def handler(event: dict, context) -> dict:
                 'brand': 'VALENTINO',
                 'price': 54990.0,
                 'currency': 'RUB',
-                'image_url': 'https://via.placeholder.com/400x500/FFF5E5/000000?text=VALENTINO',
-                'product_url': 'https://example.com/product4',
+                'image_url': image_url,
+                'product_url': '',
                 'match_score': 90.0
             }
         ]

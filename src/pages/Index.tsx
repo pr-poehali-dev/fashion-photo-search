@@ -442,8 +442,7 @@ const Index = () => {
               {searchResults.map((item, index) => (
                 <Card
                   key={index}
-                  className="group cursor-pointer border-0 shadow-sm hover:shadow-xl transition-all duration-300"
-                  onClick={() => item.product_url && window.open(item.product_url, '_blank')}
+                  className="group border-0 shadow-sm hover:shadow-xl transition-all duration-300"
                 >
                   <CardContent className="p-0">
                     <div className="relative overflow-hidden">
