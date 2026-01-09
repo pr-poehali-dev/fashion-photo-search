@@ -92,29 +92,47 @@ def handler(event: dict, context) -> dict:
         )
         search_id = cur.fetchone()[0]
         
-        # Поиск через Google Custom Search API
+        # Анализируем изображение через Google Vision API
         api_key = os.environ.get('GOOGLE_SEARCH_API_KEY')
         search_engine_id = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
         
         results = []
+        search_query = 'fashion clothing buy online'
+        
+        if api_key:
+            try:
+                vision_url = f'https://vision.googleapis.com/v1/images:annotate?key={api_key}'
+                vision_payload = {
+                    'requests': [{
+                        'image': {'content': image_base64},
+                        'features': [
+                            {'type': 'LABEL_DETECTION', 'maxResults': 10},
+                            {'type': 'WEB_DETECTION', 'maxResults': 5}
+                        ]
+                    }]
+                }
+                
+                vision_response = requests.post(vision_url, json=vision_payload, timeout=10)
+                
+                if vision_response.status_code == 200:
+                    vision_data = vision_response.json()
+                    annotations = vision_data.get('responses', [{}])[0]
+                    
+                    labels = [label['description'] for label in annotations.get('labelAnnotations', [])[:5]]
+                    web_entities = [entity['description'] for entity in annotations.get('webDetection', {}).get('webEntities', [])[:3]]
+                    
+                    search_terms = labels + web_entities
+                    if search_terms:
+                        search_query = ' '.join(search_terms[:4]) + ' buy online fashion'
+            except:
+                pass
         
         if api_key and search_engine_id:
-            # Формируем поисковый запрос на основе типа одежды
-            search_queries = {
-                'hat': 'fashion hat buy online',
-                'top': 'fashion shirt blouse buy online',
-                'bottom': 'fashion pants trousers buy online',
-                'shoes': 'fashion shoes buy online'
-            }
-            
-            query = search_queries.get(clothing_type, 'fashion clothing buy online')
-            
-            # Google Custom Search API запрос
             search_url = 'https://www.googleapis.com/customsearch/v1'
             params = {
                 'key': api_key,
                 'cx': search_engine_id,
-                'q': query,
+                'q': search_query,
                 'searchType': 'image',
                 'num': 8,
                 'imgSize': 'large',
@@ -127,7 +145,6 @@ def handler(event: dict, context) -> dict:
                 data = response.json()
                 items = data.get('items', [])
                 
-                # Генерируем случайные цены и названия брендов
                 brands = ['CHANEL', 'DIOR', 'GUCCI', 'PRADA', 'VALENTINO', 'VERSACE', 'ARMANI', 'DOLCE&GABBANA']
                 
                 for i, item in enumerate(items[:8]):
