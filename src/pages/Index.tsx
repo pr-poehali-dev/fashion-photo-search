@@ -53,7 +53,7 @@ const Index = () => {
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-light tracking-[0.2em]">LUXE VISION</h1>
+            <h1 className="text-2xl font-light tracking-[0.2em]">LUX ATELIER</h1>
             <div className="flex gap-8">
               <button
                 onClick={() => setActiveSection('home')}
@@ -425,20 +425,64 @@ const Index = () => {
                 <TabsContent value="settings" className="space-y-6">
                   <Card>
                     <CardContent className="p-6">
-                      <h3 className="text-base mb-6 uppercase tracking-[0.15em] font-light">Управление дизайном</h3>
-                      <p className="text-sm text-gray-500 mb-4 font-light">
-                        Здесь вы сможете настроить цветовую схему, шрифты и размещение рекламных блоков
-                      </p>
-                      <Button variant="outline">Открыть редактор</Button>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6">
-                      <h3 className="text-base mb-6 uppercase tracking-[0.15em] font-light">Рекламные блоки</h3>
-                      <p className="text-sm text-gray-500 mb-4 font-light">
-                        Управляйте размещением и содержанием рекламы на сайте
-                      </p>
-                      <Button variant="outline">Настроить рекламу</Button>
+                      <h3 className="text-base mb-6 uppercase tracking-[0.15em] font-light">Конструктор сайта</h3>
+                      <div className="space-y-4 mb-6">
+                        <div className="border-b pb-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Цветовая схема</Label>
+                          <div className="grid grid-cols-5 gap-3">
+                            <div className="w-full h-12 bg-white border-2 border-black rounded cursor-pointer hover:scale-105 transition-transform" title="Белый"></div>
+                            <div className="w-full h-12 bg-black rounded cursor-pointer hover:scale-105 transition-transform" title="Черный"></div>
+                            <div className="w-full h-12 bg-gray-200 rounded cursor-pointer hover:scale-105 transition-transform" title="Серый"></div>
+                            <div className="w-full h-12 bg-blue-50 rounded cursor-pointer hover:scale-105 transition-transform" title="Голубой"></div>
+                            <div className="w-full h-12 bg-pink-50 rounded cursor-pointer hover:scale-105 transition-transform" title="Розовый"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="border-b pb-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Шрифт заголовков</Label>
+                          <Select defaultValue="roboto">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="roboto">Roboto Light</SelectItem>
+                              <SelectItem value="montserrat">Montserrat</SelectItem>
+                              <SelectItem value="cormorant">Cormorant</SelectItem>
+                              <SelectItem value="playfair">Playfair Display</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="border-b pb-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Расположение логотипа</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <Button variant="outline" size="sm" className="text-xs">Слева</Button>
+                            <Button variant="outline" size="sm" className="text-xs">Центр</Button>
+                            <Button variant="outline" size="sm" className="text-xs">Справа</Button>
+                          </div>
+                        </div>
+
+                        <div className="border-b pb-4">
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Размер карточек товаров</Label>
+                          <div className="grid grid-cols-3 gap-3">
+                            <Button variant="outline" size="sm" className="text-xs">Маленький</Button>
+                            <Button variant="default" size="sm" className="text-xs">Средний</Button>
+                            <Button variant="outline" size="sm" className="text-xs">Большой</Button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Рекламный баннер</Label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-accent transition-colors cursor-pointer">
+                            <Icon name="ImagePlus" size={32} className="mx-auto mb-3 text-gray-400" />
+                            <p className="text-xs text-gray-500 mb-2">Загрузить баннер для главной страницы</p>
+                            <p className="text-xs text-gray-400">1920×400 px, JPG или PNG</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Button className="w-full bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em]">
+                        Сохранить изменения
+                      </Button>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -450,7 +494,7 @@ const Index = () => {
 
       <footer className="bg-black text-white py-12 mt-20">
         <div className="container mx-auto px-6 text-center">
-          <h3 className="text-xl font-light mb-4 tracking-[0.2em]">LUXE VISION</h3>
+          <h3 className="text-xl font-light mb-4 tracking-[0.2em]">LUX ATELIER</h3>
           <p className="text-xs text-gray-400 font-light tracking-wide uppercase">
             AI-сервис поиска одежды премиум класса
           </p>
