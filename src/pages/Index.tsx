@@ -20,6 +20,15 @@ const Index = () => {
   const [tryonClothes, setTryonClothes] = useState<string | null>(null);
   const [tryonPerson, setTryonPerson] = useState<string | null>(null);
   const [clothingType, setClothingType] = useState<string>('');
+  
+  const [theme, setTheme] = useState({
+    bgColor: 'bg-white',
+    textColor: 'text-black',
+    accentColor: 'bg-black',
+    font: 'Roboto',
+    logoPosition: 'left',
+    cardSize: 'medium',
+  });
 
   const mockResults = [
     { id: 1, name: 'Шелковая блуза', brand: 'CHANEL', price: '89 990 ₽', image: '/placeholder.svg', match: '98%' },
@@ -48,12 +57,19 @@ const Index = () => {
     }
   };
 
+  const cardSizeClasses = {
+    small: 'h-64',
+    medium: 'h-80',
+    large: 'h-96',
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+    <div className={`min-h-screen ${theme.bgColor} transition-colors duration-300`}>
+      <nav className={`fixed top-0 w-full ${theme.bgColor}/95 backdrop-blur-sm border-b border-gray-200 z-50 transition-colors duration-300`}>
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-light tracking-[0.2em]">LUX ATELIER</h1>
+          <div className={`flex items-center ${theme.logoPosition === 'center' ? 'justify-center' : theme.logoPosition === 'right' ? 'justify-end' : 'justify-between'}`}>
+            <h1 className={`text-2xl font-light tracking-[0.2em] ${theme.textColor}`} style={{ fontFamily: theme.font }}>LUX ATELIER</h1>
+            {theme.logoPosition !== 'center' && theme.logoPosition !== 'right' && (
             <div className="flex gap-8">
               <button
                 onClick={() => setActiveSection('home')}
@@ -80,6 +96,7 @@ const Index = () => {
                 Профиль
               </button>
             </div>
+            )}
           </div>
         </div>
       </nav>
@@ -357,7 +374,7 @@ const Index = () => {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className={`w-full ${cardSizeClasses[theme.cardSize as keyof typeof cardSizeClasses]} object-cover group-hover:scale-105 transition-transform duration-300`}
                       />
                       <Badge className="absolute top-4 right-4 bg-accent text-black border-0">
                         {item.match}
@@ -430,25 +447,45 @@ const Index = () => {
                         <div className="border-b pb-4">
                           <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Цветовая схема</Label>
                           <div className="grid grid-cols-5 gap-3">
-                            <div className="w-full h-12 bg-white border-2 border-black rounded cursor-pointer hover:scale-105 transition-transform" title="Белый"></div>
-                            <div className="w-full h-12 bg-black rounded cursor-pointer hover:scale-105 transition-transform" title="Черный"></div>
-                            <div className="w-full h-12 bg-gray-200 rounded cursor-pointer hover:scale-105 transition-transform" title="Серый"></div>
-                            <div className="w-full h-12 bg-blue-50 rounded cursor-pointer hover:scale-105 transition-transform" title="Голубой"></div>
-                            <div className="w-full h-12 bg-pink-50 rounded cursor-pointer hover:scale-105 transition-transform" title="Розовый"></div>
+                            <div 
+                              className={`w-full h-12 bg-white border-2 ${theme.bgColor === 'bg-white' ? 'border-black ring-2 ring-black' : 'border-gray-300'} rounded cursor-pointer hover:scale-105 transition-transform`}
+                              title="Белый"
+                              onClick={() => setTheme({ ...theme, bgColor: 'bg-white', textColor: 'text-black', accentColor: 'bg-black' })}
+                            ></div>
+                            <div 
+                              className={`w-full h-12 bg-gray-900 border-2 ${theme.bgColor === 'bg-gray-900' ? 'border-white ring-2 ring-white' : 'border-gray-700'} rounded cursor-pointer hover:scale-105 transition-transform`}
+                              title="Черный"
+                              onClick={() => setTheme({ ...theme, bgColor: 'bg-gray-900', textColor: 'text-white', accentColor: 'bg-white' })}
+                            ></div>
+                            <div 
+                              className={`w-full h-12 bg-gray-100 border-2 ${theme.bgColor === 'bg-gray-100' ? 'border-gray-400 ring-2 ring-gray-400' : 'border-gray-300'} rounded cursor-pointer hover:scale-105 transition-transform`}
+                              title="Серый"
+                              onClick={() => setTheme({ ...theme, bgColor: 'bg-gray-100', textColor: 'text-gray-900', accentColor: 'bg-gray-900' })}
+                            ></div>
+                            <div 
+                              className={`w-full h-12 bg-blue-50 border-2 ${theme.bgColor === 'bg-blue-50' ? 'border-blue-400 ring-2 ring-blue-400' : 'border-blue-200'} rounded cursor-pointer hover:scale-105 transition-transform`}
+                              title="Голубой"
+                              onClick={() => setTheme({ ...theme, bgColor: 'bg-blue-50', textColor: 'text-blue-900', accentColor: 'bg-blue-600' })}
+                            ></div>
+                            <div 
+                              className={`w-full h-12 bg-pink-50 border-2 ${theme.bgColor === 'bg-pink-50' ? 'border-pink-400 ring-2 ring-pink-400' : 'border-pink-200'} rounded cursor-pointer hover:scale-105 transition-transform`}
+                              title="Розовый"
+                              onClick={() => setTheme({ ...theme, bgColor: 'bg-pink-50', textColor: 'text-pink-900', accentColor: 'bg-pink-600' })}
+                            ></div>
                           </div>
                         </div>
                         
                         <div className="border-b pb-4">
                           <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Шрифт заголовков</Label>
-                          <Select defaultValue="roboto">
+                          <Select value={theme.font} onValueChange={(value) => setTheme({ ...theme, font: value })}>
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="roboto">Roboto Light</SelectItem>
-                              <SelectItem value="montserrat">Montserrat</SelectItem>
-                              <SelectItem value="cormorant">Cormorant</SelectItem>
-                              <SelectItem value="playfair">Playfair Display</SelectItem>
+                              <SelectItem value="Roboto">Roboto Light</SelectItem>
+                              <SelectItem value="Montserrat">Montserrat</SelectItem>
+                              <SelectItem value="Cormorant">Cormorant</SelectItem>
+                              <SelectItem value="Playfair Display">Playfair Display</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -456,18 +493,60 @@ const Index = () => {
                         <div className="border-b pb-4">
                           <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Расположение логотипа</Label>
                           <div className="grid grid-cols-3 gap-3">
-                            <Button variant="outline" size="sm" className="text-xs">Слева</Button>
-                            <Button variant="outline" size="sm" className="text-xs">Центр</Button>
-                            <Button variant="outline" size="sm" className="text-xs">Справа</Button>
+                            <Button 
+                              variant={theme.logoPosition === 'left' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, logoPosition: 'left' })}
+                            >
+                              Слева
+                            </Button>
+                            <Button 
+                              variant={theme.logoPosition === 'center' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, logoPosition: 'center' })}
+                            >
+                              Центр
+                            </Button>
+                            <Button 
+                              variant={theme.logoPosition === 'right' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, logoPosition: 'right' })}
+                            >
+                              Справа
+                            </Button>
                           </div>
                         </div>
 
                         <div className="border-b pb-4">
                           <Label className="text-xs uppercase tracking-[0.15em] font-light mb-3 block">Размер карточек товаров</Label>
                           <div className="grid grid-cols-3 gap-3">
-                            <Button variant="outline" size="sm" className="text-xs">Маленький</Button>
-                            <Button variant="default" size="sm" className="text-xs">Средний</Button>
-                            <Button variant="outline" size="sm" className="text-xs">Большой</Button>
+                            <Button 
+                              variant={theme.cardSize === 'small' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, cardSize: 'small' })}
+                            >
+                              Маленький
+                            </Button>
+                            <Button 
+                              variant={theme.cardSize === 'medium' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, cardSize: 'medium' })}
+                            >
+                              Средний
+                            </Button>
+                            <Button 
+                              variant={theme.cardSize === 'large' ? 'default' : 'outline'}
+                              size="sm" 
+                              className="text-xs"
+                              onClick={() => setTheme({ ...theme, cardSize: 'large' })}
+                            >
+                              Большой
+                            </Button>
                           </div>
                         </div>
 
