@@ -92,46 +92,70 @@ def handler(event: dict, context) -> dict:
         )
         search_id = cur.fetchone()[0]
         
-        # Анализируем изображение через Google Vision API
+        # Анализируем изображение через Replicate CLIP
         api_key = os.environ.get('GOOGLE_SEARCH_API_KEY')
         search_engine_id = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
+        replicate_token = os.environ.get('REPLICATE_API_TOKEN')
         
         results = []
         search_query = 'fashion clothing buy online'
         
-        if api_key:
+        if replicate_token:
             try:
-                vision_url = f'https://vision.googleapis.com/v1/images:annotate?key={api_key}'
-                vision_payload = {
-                    'requests': [{
-                        'image': {'content': image_base64},
-                        'features': [
-                            {'type': 'LABEL_DETECTION', 'maxResults': 10},
-                            {'type': 'WEB_DETECTION', 'maxResults': 5}
-                        ]
-                    }]
+                headers = {
+                    'Authorization': f'Token {replicate_token}',
+                    'Content-Type': 'application/json'
                 }
                 
-                vision_response = requests.post(vision_url, json=vision_payload, timeout=10)
-                print(f'Vision API status: {vision_response.status_code}')
+                payload = {
+                    'version': 'a9758cbfbd5f3c2094457d996681af52552901775aa2dfa7347d79f1b3a3f61f',
+                    'input': {
+                        'image': f'data:image/jpeg;base64,{image_base64}',
+                        'candidates': [
+                            'denim jacket', 'leather jacket', 'blazer', 'coat', 'hoodie',
+                            'dress', 'skirt', 'jeans', 'trousers', 'shorts',
+                            'shirt', 'blouse', 't-shirt', 'sweater', 'cardigan',
+                            'sneakers', 'boots', 'heels', 'sandals', 'hat', 'cap', 'scarf'
+                        ]
+                    }
+                }
                 
-                if vision_response.status_code == 200:
-                    vision_data = vision_response.json()
-                    print(f'Vision response: {json.dumps(vision_data)[:500]}')
-                    annotations = vision_data.get('responses', [{}])[0]
+                clip_response = requests.post(
+                    'https://api.replicate.com/v1/predictions',
+                    headers=headers,
+                    json=payload,
+                    timeout=10
+                )
+                
+                if clip_response.status_code == 201:
+                    prediction = clip_response.json()
+                    prediction_id = prediction.get('id')
                     
-                    labels = [label['description'] for label in annotations.get('labelAnnotations', [])[:5]]
-                    web_entities = [entity['description'] for entity in annotations.get('webDetection', {}).get('webEntities', [])[:3]]
-                    
-                    search_terms = labels + web_entities
-                    print(f'Search terms: {search_terms}')
-                    if search_terms:
-                        search_query = ' '.join(search_terms[:4]) + ' buy online fashion'
-                        print(f'Final query: {search_query}')
-                else:
-                    print(f'Vision API error: {vision_response.text[:200]}')
+                    for _ in range(15):
+                        check_response = requests.get(
+                            f'https://api.replicate.com/v1/predictions/{prediction_id}',
+                            headers=headers,
+                            timeout=5
+                        )
+                        
+                        if check_response.status_code == 200:
+                            result = check_response.json()
+                            status = result.get('status')
+                            
+                            if status == 'succeeded':
+                                output = result.get('output', [])
+                                if output and len(output) > 0:
+                                    top_match = max(output, key=lambda x: x.get('score', 0))
+                                    detected_item = top_match.get('label', '')
+                                    search_query = f'{detected_item} fashion buy online'
+                                    print(f'Detected: {detected_item}')
+                                break
+                            elif status == 'failed':
+                                break
+                        
+                        time.sleep(1)
             except Exception as e:
-                print(f'Vision exception: {str(e)}')
+                print(f'CLIP exception: {str(e)}')
         
         if api_key and search_engine_id:
             search_url = 'https://www.googleapis.com/customsearch/v1'

@@ -128,12 +128,15 @@ def handler(event: dict, context) -> dict:
                     timeout=10
                 )
                 
+                print(f'Replicate tryon status: {response.status_code}')
+                
                 if response.status_code == 201:
                     prediction = response.json()
                     prediction_id = prediction.get('id')
+                    print(f'Prediction ID: {prediction_id}')
                     
                     # Ждём результат (максимум 30 секунд)
-                    for _ in range(30):
+                    for i in range(30):
                         check_response = requests.get(
                             f'https://api.replicate.com/v1/predictions/{prediction_id}',
                             headers=headers,
@@ -143,21 +146,27 @@ def handler(event: dict, context) -> dict:
                         if check_response.status_code == 200:
                             result = check_response.json()
                             result_status = result.get('status')
+                            print(f'Attempt {i+1}: status={result_status}')
                             
                             if result_status == 'succeeded':
                                 output = result.get('output')
+                                print(f'Output: {output}')
                                 if output and isinstance(output, list) and len(output) > 0:
                                     result_url = output[0]
                                     status = 'completed'
+                                    print(f'Success! Result URL: {result_url}')
                                     break
                             elif result_status == 'failed':
+                                error = result.get('error', 'Unknown error')
+                                print(f'Replicate failed: {error}')
                                 break
                         
                         time.sleep(1)
+                else:
+                    print(f'Replicate error: {response.text[:200]}')
                         
             except Exception as e:
-                # Если ошибка с Replicate, продолжаем с fallback
-                pass
+                print(f'Tryon exception: {str(e)}')
         
         # Fallback: если AI не сработал, используем исходное фото человека
         if not result_url:
