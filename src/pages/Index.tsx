@@ -470,46 +470,47 @@ const Index = () => {
                 </CardContent>
               </Card>
             ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {searchResults.map((item, index) => (
-                <Card
-                  key={index}
-                  className="group border-0 shadow-sm hover:shadow-xl transition-all duration-300"
-                >
-                  <CardContent className="p-0">
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={item.image_url}
-                        alt={item.name}
-                        className={`w-full ${cardSizeClasses[theme.cardSize as keyof typeof cardSizeClasses]} object-cover group-hover:scale-105 transition-transform duration-300`}
-                      />
-                      <Badge className="absolute top-4 right-4 bg-accent text-black border-0">
-                        {item.match_score}%
-                      </Badge>
-                    </div>
-                    <div className="p-6">
-                      <div className="text-xs tracking-[0.15em] text-gray-400 mb-2 uppercase">
-                        {item.brand}
-                      </div>
-                      <h3 className="text-sm mb-3 font-light">{item.name}</h3>
-                      <div className="text-base font-light">{item.price.toLocaleString('ru-RU')} {item.currency}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                  {searchResults.map((item, index) => (
+                    <Card
+                      key={index}
+                      className="group border-0 shadow-sm hover:shadow-xl transition-all duration-300"
+                    >
+                      <CardContent className="p-0">
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className={`w-full ${cardSizeClasses[theme.cardSize as keyof typeof cardSizeClasses]} object-cover group-hover:scale-105 transition-transform duration-300`}
+                          />
+                          <Badge className="absolute top-4 right-4 bg-accent text-black border-0">
+                            {item.match_score}%
+                          </Badge>
+                        </div>
+                        <div className="p-6">
+                          <div className="text-xs tracking-[0.15em] text-gray-400 mb-2 uppercase">
+                            {item.brand}
+                          </div>
+                          <h3 className="text-sm mb-3 font-light">{item.name}</h3>
+                          <div className="text-base font-light">{item.price.toLocaleString('ru-RU')} {item.currency}</div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
 
-            {searchResults.length > 0 && (
-              <div className="text-center">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => setActiveSection('search')}
-                >
-                  Новый поиск
-                  <Icon name="Search" className="ml-2" size={20} />
-                </Button>
-              </div>
+                <div className="text-center">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => setActiveSection('search')}
+                  >
+                    Новый поиск
+                    <Icon name="Search" className="ml-2" size={20} />
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         )}
