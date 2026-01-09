@@ -249,10 +249,11 @@ const Index = () => {
                         <div className="text-xs text-gray-500 mb-6 tracking-wide">
                           PNG, JPG до 10MB
                         </div>
-                        <Label htmlFor="search-upload" className="cursor-pointer">
-                          <Button type="button" className="bg-black hover:bg-gray-800 uppercase text-xs tracking-[0.15em] font-light">
-                            Выбрать файл
-                          </Button>
+                        <Label 
+                          htmlFor="search-upload" 
+                          className="cursor-pointer inline-block bg-black text-white hover:bg-gray-800 px-6 py-3 rounded-md uppercase text-xs tracking-[0.15em] font-light transition-colors"
+                        >
+                          Выбрать файл
                         </Label>
                         <Input
                           id="search-upload"
@@ -312,10 +313,11 @@ const Index = () => {
                     {!tryonClothes ? (
                       <div className="text-center">
                         <Icon name="Shirt" size={40} className="mx-auto mb-4 text-gray-400" />
-                        <Label htmlFor="clothes-upload" className="cursor-pointer">
-                          <Button type="button" variant="outline" className="mb-2">
-                            Загрузить фото
-                          </Button>
+                        <Label 
+                          htmlFor="clothes-upload" 
+                          className="cursor-pointer inline-block border border-gray-300 hover:bg-gray-50 px-6 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                          Загрузить фото
                         </Label>
                         <Input
                           id="clothes-upload"
@@ -350,10 +352,11 @@ const Index = () => {
                     {!tryonPerson ? (
                       <div className="text-center">
                         <Icon name="User" size={40} className="mx-auto mb-4 text-gray-400" />
-                        <Label htmlFor="person-upload" className="cursor-pointer">
-                          <Button type="button" variant="outline" className="mb-2">
-                            Загрузить фото
-                          </Button>
+                        <Label 
+                          htmlFor="person-upload" 
+                          className="cursor-pointer inline-block border border-gray-300 hover:bg-gray-50 px-6 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                          Загрузить фото
                         </Label>
                         <Input
                           id="person-upload"
