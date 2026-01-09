@@ -511,7 +511,6 @@ const Index = () => {
                 </Button>
               </div>
             )}
-            )}
           </div>
         )}
 
